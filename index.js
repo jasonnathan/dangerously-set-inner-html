@@ -3,14 +3,14 @@ var flatten = require('lodash.flatten');
 var React = require('react');
 var uuid = require('uuid').v4;
 
-const isBrowser = !!(document && window);
+const isBrowser = Meteor.isClient;
 
-var findScritps = (node) => {
+var findScripts = (node) => {
   if (node.tagName && node.tagName === 'script') {
     return (node.childNodes || []).map((n) => n.value);
   }
 
-  return flatten((node.childNodes || []).map(findScritps));
+  return flatten((node.childNodes || []).map(findScripts));
 };
 
 var run = function() {
@@ -46,7 +46,7 @@ module.exports = React.createClass({
       return;
     }
 
-    return findScritps(parse5.parseFragment(html));
+    return findScripts(parse5.parseFragment(html));
   },
   initialState: function(props) {
     return {
